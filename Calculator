@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Calculator</title>
+  <style>
+    body {
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .calculator {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      width: 320px;
+    }
+
+    #display {
+      width: 100%;
+      height: 60px;
+      font-size: 24px;
+      text-align: right;
+      padding: 10px;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 5px;
+      background: #eee;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: #ccc;
+    }
+
+    .operator {
+      background-color: #f39c12;
+      color: white;
+    }
+
+    .equal {
+      background-color: #27ae60;
+      color: white;
+    }
+
+    .clear {
+      grid-column: span 4;
+      background-color: #e74c3c;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator">
+    <input type="text" id="display" disabled />
+    <div class="buttons">
+      <button class="btn" data-value="7">7</button>
+      <button class="btn" data-value="8">8</button>
+      <button class="btn" data-value="9">9</button>
+      <button class="btn operator" data-value="/">÷</button>
+
+      <button class="btn" data-value="4">4</button>
+      <button class="btn" data-value="5">5</button>
+      <button class="btn" data-value="6">6</button>
+      <button class="btn operator" data-value="*">×</button>
+
+      <button class="btn" data-value="1">1</button>
+      <button class="btn" data-value="2">2</button>
+      <button class="btn" data-value="3">3</button>
+      <button class="btn operator" data-value="-">−</button>
+
+      <button class="btn" data-value="0">0</button>
+      <button class="btn" data-value=".">.</button>
+      <button class="btn equal" data-value="=">=</button>
+      <button class="btn operator" data-value="+">+</button>
+
+      <button class="btn clear" data-value="C">C</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    const buttons = document.querySelectorAll('.btn');
+    let currentInput = '';
+
+    function updateDisplay() {
+      display.value = currentInput || '0';
+    }
+
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const value = button.getAttribute('data-value');
+
+        if (value === 'C') {
+          currentInput = '';
+        } else if (value === '=') {
+          try {
+            currentInput = eval(currentInput).toString();
+          } catch {
+            currentInput = 'Error';
+          }
+        } else {
+          currentInput += value;
+        }
+
+        updateDisplay();
+      });
+    });
+
+    // Keyboard support
+    document.addEventListener('keydown', (e) => {
+      const allowedKeys = '0123456789+-*/.=';
+      if (allowedKeys.includes(e.key)) {
+        if (e.key === '=') {
+          try {
+            currentInput = eval(currentInput).toString();
+          } catch {
+            currentInput = 'Error';
+          }
+        } else {
+          currentInput += e.key;
+        }
+        updateDisplay();
+      } else if (e.key === 'Enter') {
+        try {
+          currentInput = eval(currentInput).toString();
+        } catch {
+          currentInput = 'Error';
+        }
+        updateDisplay();
+      } else if (e.key === 'Backspace') {
+        currentInput = currentInput.slice(0, -1);
+        updateDisplay();
+      } else if (e.key.toLowerCase() === 'c') {
+        currentInput = '';
+        updateDisplay();
+      }
+    });
+
+    updateDisplay(); // Initialize display
+  </script>
+
+</body>
+</html>
